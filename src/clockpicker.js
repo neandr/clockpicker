@@ -355,9 +355,9 @@
 		raiseCallback(this.options.init);
 	}
 
-	function raiseCallback(callbackFunction) {
+	function raiseCallback(callbackFunction, param) {
 		if (callbackFunction && typeof callbackFunction === "function") {
-			callbackFunction();
+			callbackFunction(param);
 		}
 	}
 
@@ -454,7 +454,8 @@
 		}
 
 		// Get the time
-		var value = ((this.input.prop('value') || this.options['default'] || '') + '').split(':');
+		var optTime = e.current || null
+		var value = (optTime || (this.input.prop('value') || this.options['default'] || '') + '').split(':');
 		if (value[0] === 'now') {
 			var now = new Date(+ new Date() + this.options.fromnow);
 			value = [
@@ -480,7 +481,8 @@
 			var target = $(e.target);
 			if (target.closest(self.popover).length === 0 &&
 					target.closest(self.addon).length === 0 &&
-					target.closest(self.input).length === 0) {
+					target.closest(self.input).length === 0 &&
+					optTime === null) {
 				self.hide();
 			}
 		});
@@ -692,7 +694,7 @@
 			this.input.trigger('blur');
 		}
 
-		raiseCallback(this.options.afterDone);
+		raiseCallback(this.options.afterDone, value);
 	};
 
 	// Remove clockpicker from input
